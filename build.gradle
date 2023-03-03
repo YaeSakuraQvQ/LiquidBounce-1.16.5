@@ -103,7 +103,6 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation project(":theme")
 
     // Test libraries
 
@@ -120,6 +119,24 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         exclude "fabric.mod.json"
+    }
+}
+
+// The following code will include the theme into the build
+
+task makeTheme(type: Exec) {
+    workingDir file("theme")
+    commandLine "python", "build.py"
+    doLast {
+        println "Successfully exported theme.zip"
+    }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "theme/resources"
+        }
     }
 }
 
@@ -159,7 +176,6 @@ shadowJar {
         include(dependency('com.labymedia:ultralight-java-databind'))
         include(dependency('com.labymedia:ultralight-java-gpu'))
         include(dependency('com.thealtening.api:api'))
-        include(project(":theme"))
     }
 }
 
